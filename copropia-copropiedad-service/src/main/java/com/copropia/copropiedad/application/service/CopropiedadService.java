@@ -8,11 +8,13 @@ import com.copropia.copropiedad.domain.port.out.PlanRepository;
 import com.copropia.common.exception.BusinessException;
 import com.copropia.common.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CopropiedadService implements CopropiedadUseCase {
@@ -23,7 +25,9 @@ public class CopropiedadService implements CopropiedadUseCase {
     @Override
     @Transactional
     public Copropiedad create(Copropiedad copropiedad) {
+        log.info("Creando copropiedad: {} NIT: {}", copropiedad.getNombre(), copropiedad.getNit());
         if (copropiedadRepository.existsByNit(copropiedad.getNit())) {
+            log.warn("Intento de crear copropiedad con NIT duplicado: {}", copropiedad.getNit());
             throw new BusinessException("Ya existe una copropiedad con NIT: " + copropiedad.getNit());
         }
         planRepository.findById(copropiedad.getPlanId())
@@ -31,23 +35,30 @@ public class CopropiedadService implements CopropiedadUseCase {
 
         copropiedad.setEstado(EstadoCopropiedad.ACTIVA);
         copropiedad.setCreatedAt(LocalDateTime.now());
-        return copropiedadRepository.save(copropiedad);
+        Copropiedad saved = copropiedadRepository.save(copropiedad);
+        log.info("Copropiedad creada exitosamente con id: {}", saved.getId());
+        return saved;
     }
 
     @Override
     public Copropiedad getById(Long id) {
+        log.debug("Buscando copropiedad con id: {}", id);
         return copropiedadRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Copropiedad", id));
     }
 
     @Override
     public List<Copropiedad> getAll() {
-        return copropiedadRepository.findAll();
+        log.debug("Consultando todas las copropiedades");
+        List<Copropiedad> result = copropiedadRepository.findAll();
+        log.debug("Copropiedades encontradas: {}", result.size());
+        return result;
     }
 
     @Override
     @Transactional
     public Copropiedad update(Long id, Copropiedad updated) {
+        log.info("Actualizando copropiedad id: {}", id);
         Copropiedad existing = getById(id);
         existing.setNombre(updated.getNombre());
         existing.setDireccion(updated.getDireccion());
@@ -61,8 +72,10 @@ public class CopropiedadService implements CopropiedadUseCase {
     @Override
     @Transactional
     public void deactivate(Long id) {
+        log.warn("Desactivando copropiedad id: {}", id);
         Copropiedad copropiedad = getById(id);
         copropiedad.setEstado(EstadoCopropiedad.INACTIVA);
         copropiedadRepository.save(copropiedad);
+        log.info("Copropiedad id: {} desactivada exitosamente", id);
     }
 }

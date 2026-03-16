@@ -6,11 +6,13 @@ import com.copropia.copropiedad.domain.port.in.PlanUseCase;
 import com.copropia.copropiedad.infrastructure.adapter.in.web.dto.PlanRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/planes")
 @RequiredArgsConstructor
@@ -19,6 +21,7 @@ public class PlanController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Plan>> create(@Valid @RequestBody PlanRequest req) {
+        log.debug("POST /api/planes - nombre: {}", req.getNombre());
         Plan plan = Plan.builder()
                 .nombre(req.getNombre()).descripcion(req.getDescripcion())
                 .maxCopropiedades(req.getMaxCopropiedades()).maxUsuarios(req.getMaxUsuarios())
@@ -28,16 +31,19 @@ public class PlanController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Plan>> getById(@PathVariable Long id) {
+        log.debug("GET /api/planes/{}", id);
         return ResponseEntity.ok(ApiResponse.ok(planUseCase.getById(id)));
     }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Plan>>> getAll() {
+        log.debug("GET /api/planes");
         return ResponseEntity.ok(ApiResponse.ok(planUseCase.getAll()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Plan>> update(@PathVariable Long id, @Valid @RequestBody PlanRequest req) {
+        log.debug("PUT /api/planes/{}", id);
         Plan plan = Plan.builder()
                 .nombre(req.getNombre()).descripcion(req.getDescripcion())
                 .maxCopropiedades(req.getMaxCopropiedades()).maxUsuarios(req.getMaxUsuarios())

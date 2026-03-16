@@ -6,12 +6,14 @@ import com.copropia.asamblea.infrastructure.adapter.in.web.dto.AsambleaRequest;
 import com.copropia.common.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/asambleas")
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class AsambleaController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Asamblea>> create(@Valid @RequestBody AsambleaRequest req) {
+        log.info("POST /api/asambleas - {}", req.getNombre());
         Asamblea asamblea = Asamblea.builder()
                 .copropiedadId(req.getCopropiedadId())
                 .creadoPor(req.getCreadoPor())
@@ -43,11 +46,13 @@ public class AsambleaController {
 
     @PatchMapping("/{id}/abrir")
     public ResponseEntity<ApiResponse<Asamblea>> open(@PathVariable Long id) {
+        log.info("PATCH /api/asambleas/{}/abrir", id);
         return ResponseEntity.ok(ApiResponse.ok("Asamblea abierta", asambleaUseCase.open(id)));
     }
 
     @PatchMapping("/{id}/cerrar")
     public ResponseEntity<ApiResponse<Asamblea>> close(@PathVariable Long id) {
+        log.info("PATCH /api/asambleas/{}/cerrar", id);
         return ResponseEntity.ok(ApiResponse.ok("Asamblea cerrada", asambleaUseCase.close(id)));
     }
 }

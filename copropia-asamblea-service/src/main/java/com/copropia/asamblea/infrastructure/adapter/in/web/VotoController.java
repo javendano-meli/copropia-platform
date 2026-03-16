@@ -7,10 +7,12 @@ import com.copropia.asamblea.infrastructure.adapter.in.web.dto.VotoRequest;
 import com.copropia.common.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/votos")
 @RequiredArgsConstructor
@@ -19,6 +21,7 @@ public class VotoController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<Voto>> emitirVoto(@Valid @RequestBody VotoRequest req) {
+        log.info("POST /api/votos - votacion: {}, propiedad: {}", req.getVotacionId(), req.getPropiedadId());
         Voto voto = Voto.builder()
                 .votacionId(req.getVotacionId())
                 .opcionId(req.getOpcionId())
@@ -33,6 +36,7 @@ public class VotoController {
     public ResponseEntity<ApiResponse<ResultadoVotacion>> getResultados(
             @PathVariable Long votacionId,
             @RequestParam Long copropiedadId) {
+        log.info("GET /api/votos/resultados/{}", votacionId);
         return ResponseEntity.ok(ApiResponse.ok(votoUseCase.getResultados(votacionId, copropiedadId)));
     }
 }

@@ -9,6 +9,7 @@ import com.copropia.common.enums.EstadoVotacion;
 import com.copropia.common.exception.BusinessException;
 import com.copropia.common.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class VotoService implements VotoUseCase {
@@ -29,14 +31,18 @@ public class VotoService implements VotoUseCase {
     @Override
     @Transactional
     public Voto emitirVoto(Voto voto) {
+        log.info("Voto recibido - votacion: {}, propiedad: {}, opcion: {}, coeficiente: {}",
+                voto.getVotacionId(), voto.getPropiedadId(), voto.getOpcionId(), voto.getCoeficienteAplicado());
         Votacion votacion = votacionRepository.findById(voto.getVotacionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Votacion", voto.getVotacionId()));
 
         if (votacion.getEstado() != EstadoVotacion.ABIERTA) {
+            log.warn("Intento de votar en votacion {} con estado {}", votacion.getId(), votacion.getEstado());
             throw new BusinessException("La votacion no esta abierta");
         }
 
         if (votoRepository.existsByVotacionIdAndPropiedadId(voto.getVotacionId(), voto.getPropiedadId())) {
+            log.warn("Voto duplicado - propiedad {} ya voto en votacion {}", voto.getPropiedadId(), voto.getVotacionId());
             throw new BusinessException("Esta propiedad ya emitio un voto en esta votacion");
         }
 
@@ -44,11 +50,14 @@ public class VotoService implements VotoUseCase {
                 .orElseThrow(() -> new ResourceNotFoundException("OpcionVoto", voto.getOpcionId()));
 
         voto.setTimestamp(LocalDateTime.now());
-        return votoRepository.save(voto);
+        Voto saved = votoRepository.save(voto);
+        log.info("Voto registrado exitosamente id: {}", saved.getId());
+        return saved;
     }
 
     @Override
     public ResultadoVotacion getResultados(Long votacionId, Long copropiedadId) {
+        log.info("Consultando resultados votacion {}", votacionId);
         Votacion votacion = votacionRepository.findById(votacionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Votacion", votacionId));
 
@@ -81,7 +90,7 @@ public class VotoService implements VotoUseCase {
                             .build();
                 }).toList();
 
-        return ResultadoVotacion.builder()
+        ResultadoVotacion resultado = ResultadoVotacion.builder()
                 .votacionId(votacionId)
                 .titulo(votacion.getTitulo())
                 .totalVotos(votos.size())
@@ -89,5 +98,7 @@ public class VotoService implements VotoUseCase {
                 .porcentajeParticipacion(coeficienteVotado)
                 .resultadosPorOpcion(resultados)
                 .build();
+        log.info("Resultados votacion {}: {} votos, coeficiente total: {}", votacionId, votos.size(), coeficienteVotado);
+        return resultado;
     }
 }
