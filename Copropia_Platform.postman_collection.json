@@ -1,0 +1,1946 @@
+{
+	"info": {
+		"_postman_id": "copropia-platform-2026",
+		"name": "Copropia Platform",
+		"description": "Comprehensive API collection for Copropia Platform - Microservices behind API Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{ "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+		{ "key": "token", "value": "", "type": "string" },
+		{ "key": "adminToken", "value": "", "type": "string" },
+		{ "key": "propietarioToken", "value": "", "type": "string" },
+		{ "key": "planId", "value": "", "type": "string" },
+		{ "key": "copropiedadId", "value": "", "type": "string" },
+		{ "key": "propiedadId", "value": "", "type": "string" },
+		{ "key": "asambleaId", "value": "", "type": "string" },
+		{ "key": "votacionId", "value": "", "type": "string" }
+	],
+	"item": [
+		{
+			"name": "Auth Service",
+			"item": [
+				{
+					"name": "Register Super Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Admin\",\n  \"apellido\": \"Sistema\",\n  \"email\": \"admin@copropia.com\",\n  \"password\": \"Admin1234!\",\n  \"rol\": \"SUPER_ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Response has success=true', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Register Admin Copropiedad",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Carlos\",\n  \"apellido\": \"Martinez\",\n  \"email\": \"carlos@torres.com\",\n  \"password\": \"Carlos1234!\",\n  \"rol\": \"ADMIN_COPROPIEDAD\",\n  \"copropiedadId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Register Propietario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Perez\",\n  \"email\": \"juan@email.com\",\n  \"password\": \"Juan1234!\",\n  \"rol\": \"PROPIETARIO\",\n  \"copropiedadId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Save userId from response', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.id) {",
+									"        pm.collectionVariables.set('propietarioUserId', jsonData.data.id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@copropia.com\",\n  \"password\": \"Admin1234!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Extract and save token', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('token');",
+									"    pm.collectionVariables.set('token', jsonData.data.token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Login Admin Copropiedad",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"carlos@torres.com\",\n  \"password\": \"Carlos1234!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Save adminToken', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('adminToken', jsonData.data.token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Login Propietario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"juan@email.com\",\n  \"password\": \"Juan1234!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Save propietarioToken', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('propietarioToken', jsonData.data.token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Usuario by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "usuarios", "1"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Usuarios by Copropiedad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/copropiedad/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "usuarios", "copropiedad", "1"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Deactivate Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/usuarios/3",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "usuarios", "3"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200 or 204', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Planes",
+			"item": [
+				{
+					"name": "Create Plan Basico",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Plan Basico\",\n  \"descripcion\": \"Plan para conjuntos pequenos\",\n  \"maxCopropiedades\": 1,\n  \"maxUsuarios\": 50,\n  \"precio\": 50000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/planes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "planes"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Save planId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.id) {",
+									"        pm.collectionVariables.set('planId', jsonData.data.id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Create Plan Premium",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Plan Premium\",\n  \"descripcion\": \"Plan para grandes conjuntos\",\n  \"maxCopropiedades\": 5,\n  \"maxUsuarios\": 500,\n  \"precio\": 150000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/planes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "planes"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get All Planes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/planes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "planes"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Plan by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/planes/{{planId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "planes", "{{planId}}"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Update Plan",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Plan Basico Plus\",\n  \"descripcion\": \"Plan mejorado\",\n  \"maxCopropiedades\": 2,\n  \"maxUsuarios\": 100,\n  \"precio\": 75000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/planes/{{planId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "planes", "{{planId}}"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Copropiedades",
+			"item": [
+				{
+					"name": "Create Copropiedad",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"planId\": 1,\n  \"nombre\": \"Torres del Parque\",\n  \"nit\": \"900123456-1\",\n  \"direccion\": \"Cra 5 #26-40\",\n  \"ciudad\": \"Bogota\",\n  \"departamento\": \"Cundinamarca\",\n  \"telefono\": \"6012345678\",\n  \"email\": \"admin@torresdelparque.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/copropiedades",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "copropiedades"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Save copropiedadId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.id) {",
+									"        pm.collectionVariables.set('copropiedadId', jsonData.data.id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Create Another Copropiedad",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"planId\": 1,\n  \"nombre\": \"Edificio Central\",\n  \"nit\": \"900654321-1\",\n  \"direccion\": \"Calle 100 #15-20\",\n  \"ciudad\": \"Bogota\",\n  \"departamento\": \"Cundinamarca\",\n  \"telefono\": \"6019876543\",\n  \"email\": \"admin@edificiocentral.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/copropiedades",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "copropiedades"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get All Copropiedades",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/copropiedades",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "copropiedades"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Copropiedad by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/copropiedades/{{copropiedadId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "copropiedades", "{{copropiedadId}}"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Update Copropiedad",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"planId\": 1,\n  \"nombre\": \"Torres del Parque Residencial\",\n  \"nit\": \"900123456-1\",\n  \"direccion\": \"Cra 5 #26-40\",\n  \"ciudad\": \"Bogota\",\n  \"departamento\": \"Cundinamarca\",\n  \"telefono\": \"6012345679\",\n  \"email\": \"nuevoadmin@torresdelparque.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/copropiedades/{{copropiedadId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "copropiedades", "{{copropiedadId}}"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Deactivate Copropiedad",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/copropiedades/2",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "copropiedades", "2"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200 or 204', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Propiedades",
+			"item": [
+				{
+					"name": "Create Propiedad Apto 101",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"copropiedadId\": 1,\n  \"propietarioId\": 3,\n  \"identificacion\": \"Apto 101\",\n  \"tipo\": \"APARTAMENTO\",\n  \"metrosCuadrados\": 75.00,\n  \"coeficiente\": 2.5000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/propiedades",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "propiedades"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Save propiedadId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.id) {",
+									"        pm.collectionVariables.set('propiedadId', jsonData.data.id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Create Propiedad Apto 102",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"copropiedadId\": 1,\n  \"propietarioId\": null,\n  \"identificacion\": \"Apto 102\",\n  \"tipo\": \"APARTAMENTO\",\n  \"metrosCuadrados\": 60.00,\n  \"coeficiente\": 1.2000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/propiedades",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "propiedades"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Create Propiedad Apto 103",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"copropiedadId\": 1,\n  \"propietarioId\": null,\n  \"identificacion\": \"Apto 103\",\n  \"tipo\": \"APARTAMENTO\",\n  \"metrosCuadrados\": 90.00,\n  \"coeficiente\": 3.0000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/propiedades",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "propiedades"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Create Local 201",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"copropiedadId\": 1,\n  \"propietarioId\": null,\n  \"identificacion\": \"Local 201\",\n  \"tipo\": \"LOCAL\",\n  \"metrosCuadrados\": 120.00,\n  \"coeficiente\": 5.0000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/propiedades",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "propiedades"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Propiedades by Copropiedad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/propiedades/copropiedad/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "propiedades", "copropiedad", "1"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Propiedades by Propietario",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/propiedades/propietario/3",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "propiedades", "propietario", "3"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Total Coeficiente",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/propiedades/copropiedad/1/coeficiente-total",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "propiedades", "copropiedad", "1", "coeficiente-total"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Coeficiente total is sum of all properties', function () {",
+									"    var jsonData = pm.response.json();",
+									"    // Expected: 2.5 + 1.2 + 3.0 + 5.0 = 11.7",
+									"    if (jsonData.data !== undefined) {",
+									"        pm.expect(jsonData.data).to.eql(11.7);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Propiedad by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/propiedades/{{propiedadId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "propiedades", "{{propiedadId}}"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Update Propiedad",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"copropiedadId\": 1,\n  \"propietarioId\": 3,\n  \"identificacion\": \"Apto 101\",\n  \"tipo\": \"APARTAMENTO\",\n  \"metrosCuadrados\": 75.00,\n  \"coeficiente\": 2.8000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/propiedades/{{propiedadId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "propiedades", "{{propiedadId}}"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Asambleas",
+			"item": [
+				{
+					"name": "Create Asamblea Ordinaria",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"copropiedadId\": 1,\n  \"creadoPor\": 2,\n  \"nombre\": \"Asamblea Ordinaria 2026\",\n  \"descripcion\": \"Asamblea ordinaria anual de copropietarios\",\n  \"fechaProgramada\": \"2026-04-15T14:00:00\",\n  \"quorumRequerido\": 51.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/asambleas",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "asambleas"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Save asambleaId', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.id) {",
+									"        pm.collectionVariables.set('asambleaId', jsonData.data.id);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Create Asamblea Extraordinaria",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"copropiedadId\": 1,\n  \"creadoPor\": 2,\n  \"nombre\": \"Asamblea Extraordinaria\",\n  \"descripcion\": \"Asamblea para aprobacion de obra\",\n  \"fechaProgramada\": \"2026-05-01T10:00:00\",\n  \"quorumRequerido\": 70.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/asambleas",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "asambleas"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Asambleas by Copropiedad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/asambleas/copropiedad/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "asambleas", "copropiedad", "1"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Asamblea by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/asambleas/{{asambleaId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "asambleas", "{{asambleaId}}"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Open Asamblea",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/asambleas/{{asambleaId}}/abrir",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "asambleas", "{{asambleaId}}", "abrir"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Estado is ABIERTA', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.estado) {",
+									"        pm.expect(jsonData.data.estado).to.eql('ABIERTA');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Close Asamblea",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/asambleas/{{asambleaId}}/cerrar",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "asambleas", "{{asambleaId}}", "cerrar"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Estado is CERRADA', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.estado) {",
+									"        pm.expect(jsonData.data.estado).to.eql('CERRADA');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Votaciones",
+			"item": [
+				{
+					"name": "Create Votacion Presupuesto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"asambleaId\": 1,\n  \"titulo\": \"Aprobacion presupuesto 2026\",\n  \"descripcion\": \"Aprobacion del presupuesto anual por valor de $500.000.000\",\n  \"tipoVotacion\": \"APROBACION_SIMPLE\",\n  \"orden\": 1,\n  \"opciones\": [\"Si\", \"No\", \"Abstencion\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votaciones",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votaciones"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Save votacionId and opcion IDs', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.id) {",
+									"        pm.collectionVariables.set('votacionId', jsonData.data.id);",
+									"    }",
+									"    if (jsonData.data && jsonData.data.opciones) {",
+									"        jsonData.data.opciones.forEach(function(opcion, index) {",
+									"            pm.collectionVariables.set('opcionId' + (index + 1), opcion.id);",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Create Votacion Consejo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"asambleaId\": 1,\n  \"titulo\": \"Eleccion Consejo de Administracion\",\n  \"descripcion\": \"Eleccion de 3 miembros para el consejo\",\n  \"tipoVotacion\": \"ELECCION_MULTIPLE\",\n  \"orden\": 2,\n  \"opciones\": [\"Plancha A\", \"Plancha B\", \"Plancha C\", \"Voto en blanco\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votaciones",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votaciones"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Create Votacion Obra",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"asambleaId\": 1,\n  \"titulo\": \"Aprobacion remodelacion lobby\",\n  \"descripcion\": \"Obra de remodelacion por $80.000.000\",\n  \"tipoVotacion\": \"MAYORIA_CALIFICADA\",\n  \"orden\": 3,\n  \"opciones\": [\"Si\", \"No\", \"Abstencion\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votaciones",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votaciones"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Votaciones by Asamblea",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/votaciones/asamblea/{{asambleaId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votaciones", "asamblea", "{{asambleaId}}"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Votacion by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/votaciones/{{votacionId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votaciones", "{{votacionId}}"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Open Votacion",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/votaciones/{{votacionId}}/abrir",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votaciones", "{{votacionId}}", "abrir"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Estado is ABIERTA', function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data && jsonData.data.estado) {",
+									"        pm.expect(jsonData.data.estado).to.eql('ABIERTA');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Close Votacion",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/votaciones/{{votacionId}}/cerrar",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votaciones", "{{votacionId}}", "cerrar"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Votos y Resultados",
+			"item": [
+				{
+					"name": "Emitir Voto - Apto 101 (Si)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"votacionId\": 1,\n  \"opcionId\": 1,\n  \"usuarioId\": 3,\n  \"propiedadId\": 1,\n  \"coeficienteAplicado\": 2.5000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Emitir Voto - Apto 102 (No)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"votacionId\": 1,\n  \"opcionId\": 2,\n  \"usuarioId\": 3,\n  \"propiedadId\": 2,\n  \"coeficienteAplicado\": 1.2000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Emitir Voto - Apto 103 (Si)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"votacionId\": 1,\n  \"opcionId\": 1,\n  \"usuarioId\": 3,\n  \"propiedadId\": 3,\n  \"coeficienteAplicado\": 3.0000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Emitir Voto - Local 201 (Abstencion)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"votacionId\": 1,\n  \"opcionId\": 3,\n  \"usuarioId\": 3,\n  \"propiedadId\": 4,\n  \"coeficienteAplicado\": 5.0000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Emitir Voto Duplicado (debe fallar)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"votacionId\": 1,\n  \"opcionId\": 1,\n  \"usuarioId\": 3,\n  \"propiedadId\": 1,\n  \"coeficienteAplicado\": 2.5000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400 (duplicate vote)', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Error message contains ya emitio', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var message = jsonData.message || jsonData.error || JSON.stringify(jsonData);",
+									"    pm.expect(message.toLowerCase()).to.include('ya emitio');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Resultados Votacion",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/votos/resultados/{{votacionId}}?copropiedadId=1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos", "resultados", "{{votacionId}}"],
+							"query": [
+								{ "key": "copropiedadId", "value": "1" }
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Verify totalVotos is 4', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var data = jsonData.data || jsonData;",
+									"    pm.expect(data.totalVotos).to.eql(4);",
+									"});",
+									"",
+									"pm.test('Verify coeficiente totals per opcion', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var data = jsonData.data || jsonData;",
+									"    var resultados = data.resultados || data.opciones || [];",
+									"    ",
+									"    var siResult = resultados.find(function(r) { return r.opcion === 'Si' || r.nombre === 'Si'; });",
+									"    var noResult = resultados.find(function(r) { return r.opcion === 'No' || r.nombre === 'No'; });",
+									"    var abstResult = resultados.find(function(r) { return r.opcion === 'Abstencion' || r.nombre === 'Abstencion'; });",
+									"    ",
+									"    if (siResult) pm.expect(siResult.coeficienteTotal).to.eql(5.5);",
+									"    if (noResult) pm.expect(noResult.coeficienteTotal).to.eql(1.2);",
+									"    if (abstResult) pm.expect(abstResult.coeficienteTotal).to.eql(5.0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Flujo Completo E2E",
+			"item": [
+				{
+					"name": "E2E - Setup: Login Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@copropia.com\",\n  \"password\": \"Admin1234!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Save token for E2E flow', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.data.token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "E2E - Abrir Asamblea",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/asambleas/1/abrir",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "asambleas", "1", "abrir"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "E2E - Abrir Votacion",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/votaciones/1/abrir",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votaciones", "1", "abrir"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "E2E - Votar Apto 101",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"votacionId\": 1,\n  \"opcionId\": 1,\n  \"usuarioId\": 3,\n  \"propiedadId\": 1,\n  \"coeficienteAplicado\": 2.5000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "E2E - Votar Apto 102",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"votacionId\": 1,\n  \"opcionId\": 2,\n  \"usuarioId\": 3,\n  \"propiedadId\": 2,\n  \"coeficienteAplicado\": 1.2000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "E2E - Votar Apto 103",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"votacionId\": 1,\n  \"opcionId\": 1,\n  \"usuarioId\": 3,\n  \"propiedadId\": 3,\n  \"coeficienteAplicado\": 3.0000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/votos",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "E2E - Ver Resultados",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/votos/resultados/1?copropiedadId=1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votos", "resultados", "1"],
+							"query": [
+								{ "key": "copropiedadId", "value": "1" }
+							]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Results contain vote data', function () {",
+									"    var jsonData = pm.response.json();",
+									"    var data = jsonData.data || jsonData;",
+									"    pm.expect(data).to.have.property('totalVotos');",
+									"    pm.expect(data.totalVotos).to.be.above(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "E2E - Cerrar Votacion",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/votaciones/1/cerrar",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "votaciones", "1", "cerrar"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "E2E - Cerrar Asamblea",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Authorization", "value": "Bearer {{token}}" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/asambleas/1/cerrar",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "asambleas", "1", "cerrar"]
+						}
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
