@@ -26,6 +26,7 @@
         <module>copropia-auth-service</module>
         <module>copropia-copropiedad-service</module>
         <module>copropia-asamblea-service</module>
+        <module>copropia-zona-comun-service</module>
     </modules>
 
     <properties>

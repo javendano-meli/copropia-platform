@@ -20,6 +20,9 @@ public class GatewayConfig {
                 .route("asamblea-service", r -> r
                         .path("/api/asambleas/**", "/api/votaciones/**", "/api/votos/**")
                         .uri("lb://asamblea-service"))
+                .route("zona-comun-service", r -> r
+                        .path("/api/zonas-comunes/**", "/api/reservas/**")
+                        .uri("lb://zona-comun-service"))
                 .build();
     }
 }

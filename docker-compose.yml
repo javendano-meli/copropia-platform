@@ -37,7 +37,20 @@ services:
     volumes:
       - postgres_asamblea_data:/var/lib/postgresql/data
 
+  postgres-zona-comun:
+    image: postgres:16-alpine
+    container_name: copropia-postgres-zona-comun
+    environment:
+      POSTGRES_DB: copropia_zona_comun
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5436:5432"
+    volumes:
+      - postgres_zona_comun_data:/var/lib/postgresql/data
+
 volumes:
   postgres_auth_data:
   postgres_copropiedad_data:
   postgres_asamblea_data:
+  postgres_zona_comun_data:
