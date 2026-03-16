@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  postgres-auth:
+    image: postgres:16-alpine
+    container_name: copropia-postgres-auth
+    environment:
+      POSTGRES_DB: copropia_auth
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+
+  postgres-copropiedad:
+    image: postgres:16-alpine
+    container_name: copropia-postgres-copropiedad
+    environment:
+      POSTGRES_DB: copropia_copropiedad
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_copropiedad_data:/var/lib/postgresql/data
+
+  postgres-asamblea:
+    image: postgres:16-alpine
+    container_name: copropia-postgres-asamblea
+    environment:
+      POSTGRES_DB: copropia_asamblea
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_asamblea_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_auth_data:
+  postgres_copropiedad_data:
+  postgres_asamblea_data:
