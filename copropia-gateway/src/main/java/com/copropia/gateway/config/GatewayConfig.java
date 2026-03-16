@@ -23,6 +23,9 @@ public class GatewayConfig {
                 .route("zona-comun-service", r -> r
                         .path("/api/zonas-comunes/**", "/api/reservas/**")
                         .uri("lb://zona-comun-service"))
+                .route("pqr-service", r -> r
+                        .path("/api/pqr/**", "/api/pqr-comentarios/**")
+                        .uri("lb://pqr-service"))
                 .build();
     }
 }

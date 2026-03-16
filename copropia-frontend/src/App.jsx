@@ -10,6 +10,7 @@ import AsambleasPage from './pages/asambleas/AsambleasPage';
 import VotacionesPage from './pages/votaciones/VotacionesPage';
 import ZonasComunesPage from './pages/zonas-comunes/ZonasComunesPage';
 import ReservasPage from './pages/reservas/ReservasPage';
+import PqrFeedPage from './pages/pqr/PqrFeedPage';
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
@@ -31,6 +32,7 @@ export default function App() {
       <Route path="/votaciones" element={<ProtectedRoute><VotacionesPage /></ProtectedRoute>} />
       <Route path="/zonas-comunes" element={<ProtectedRoute><ZonasComunesPage /></ProtectedRoute>} />
       <Route path="/reservas" element={<ProtectedRoute><ReservasPage /></ProtectedRoute>} />
+      <Route path="/pqr" element={<ProtectedRoute><PqrFeedPage /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

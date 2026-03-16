@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import {
   LayoutDashboard, Building2, Home, Users, CalendarDays,
-  Vote, TreePalm, CalendarClock, LogOut, Settings
+  Vote, TreePalm, CalendarClock, MessageSquare, LogOut, Settings
 } from 'lucide-react';
 
 const navItems = [
@@ -14,6 +14,7 @@ const navItems = [
   { to: '/votaciones', icon: Vote, label: 'Votaciones', roles: ['SUPER_ADMIN', 'ADMIN_COPROPIEDAD', 'PROPIETARIO'] },
   { to: '/zonas-comunes', icon: TreePalm, label: 'Zonas Comunes', roles: ['SUPER_ADMIN', 'ADMIN_COPROPIEDAD', 'PROPIETARIO'] },
   { to: '/reservas', icon: CalendarClock, label: 'Reservas', roles: ['SUPER_ADMIN', 'ADMIN_COPROPIEDAD', 'PROPIETARIO'] },
+  { to: '/pqr', icon: MessageSquare, label: 'PQR', roles: ['SUPER_ADMIN', 'ADMIN_COPROPIEDAD', 'PROPIETARIO'] },
 ];
 
 export default function Sidebar() {
